@@ -1,0 +1,1 @@
+app.add_amount(100,"2nd comment")

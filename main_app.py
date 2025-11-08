@@ -11,14 +11,18 @@ class XpenseT:
         self._total_amount=0.0
         self.user_id=user_id
         ...
+
+    def database_connect(self):
+        return mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="30102004",
+            database="XpenseTrack"
+        )
+        ...
     def userinfo_data_from_DB(self):
         file_name="user_info_data.json"
-        mydb=mysql.connector.connect(
-            host="localhost",
-            user= "root",
-            password="30102004",
-            database = "XpenseTrack"
-        )
+        mydb=self.database_connect()
 
         cursor=mydb.cursor(dictionary=True)
 
@@ -33,12 +37,7 @@ join user_pass p on u.u_id=p.user_id;
         self.load_data(user_info,file_name) # type: ignore
 
     def colect_uid(self,user_name):
-        mydb=mysql.connector.connect(
-            host="localhost",
-            user= "root",
-            password="30102004",
-            database = "XpenseTrack"
-        )
+        mydb=self.database_connect()
 
         cursor=mydb.cursor(dictionary=True)
         cursor.execute(
@@ -119,12 +118,7 @@ select u_id,user_name from user_info;
             self.user_name = user_name
             self.password = password
 
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="30102004",
-                database="XpenseTrack"
-            )
+            mydb = self.database_connect()
             cursor = mydb.cursor()
 
             
@@ -172,12 +166,7 @@ select u_id,user_name from user_info;
             return True
         
     def total_amount_extract(self, user_name):
-        db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="30102004",
-            database="XpenseTrack"
-        )
+        db = self.database_connect()
         cursor = db.cursor()
 
         try:
@@ -206,12 +195,7 @@ select u_id,user_name from user_info;
 
     def xpense_track_data(self):
         file_name=f"{self.user_name}_xpense_data.json"
-        mydb=mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="30102004",
-            database="XpenseTrack"
-        )
+        mydb=self.database_connect()
         cursor=mydb.cursor(dictionary=True)
         query=(f"""
 select * from {self.user_name}_add
@@ -234,12 +218,7 @@ CREATE INDEX xpense_history ON {self.user_name}_add(id);
 
         new_total = float(self.total) + float(amount)
 
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="30102004",
-            database="XpenseTrack"
-        )
+        mydb = self.database_connect() 
         cursor = mydb.cursor()
 
         query = f"""
@@ -290,4 +269,6 @@ CREATE INDEX xpense_history ON {self.user_name}_add(id);
             print("❌ Not Eligable")
             return False
         ...  
+    def grp_creation(self):
+        ...
 
